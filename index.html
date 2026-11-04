@@ -775,11 +775,11 @@ if(!window.gsap) document.documentElement.classList.add('no-gsap','reveal-off');
 addEventListener('error',e=>{ const i=e.target; if(i.tagName!=='IMG') return; if(i.dataset.fb&&i.src.indexOf(i.dataset.fb)<0) i.src=i.dataset.fb; else if('rm' in i.dataset) i.remove(); },true);
 
 /* ---------- 3D target, read by the stage ---------- */
-const T=window.khT={x:1.7,y:.05,s:1,rx:.05,ry:-.35,mis:1,split:0,wave:0,queue:0,dim:1,callouts:0,assemble:1,ring:0,ringA:0};
+const T=window.khT={x:1.7,y:.05,s:1,rx:.05,ry:0,mis:1,split:0,wave:0,queue:0,dim:1,callouts:0,assemble:1,ring:0,ringA:0};
 const IN=window.khIn={rot:0,mx:0,my:0,scrollRot:0};
 const POSES={ // [x,y,s,ry,mis,dim] desktop · mobile derives from it
-  hero:[1.95,.04,1.04,-.35,.62,1], sintomas:[2.5,-.05,.86,.45,.55,.8], diag:[.42,.05,.74,.5,.5,.34], cat:[2.7,.2,.7,-.5,.42,.2],
-  albaran:[2.6,.5,.62,.3,.34,.3], metodo:[2.5,.35,.78,0,.2,.5], equipo:[3.7,0,.9,-.4,.16,.16], biblio:[3.2,.3,.7,.6,.08,.14], faq:[2.0,0,.95,-.3,.05,.78], final:[2.3,.22,.84,0,0,.7], foot:[2.3,.22,.84,0,0,0], acerca:[2.5,0,1,-.25,.3,.95], contacto:[.1,.05,.95,0,0,.16]};
+  hero:[1.95,.04,1.04,0,.62,1], sintomas:[2.5,-.05,.86,0,.55,.8], diag:[.42,.05,.74,0,.5,.34], cat:[2.7,.2,.7,0,.42,.2],
+  albaran:[2.6,.5,.62,0,.34,.3], metodo:[2.5,.35,.78,0,.2,.5], equipo:[3.7,0,.9,0,.16,.16], biblio:[3.2,.3,.7,0,.08,.14], faq:[2.0,0,.95,0,.05,.78], final:[2.3,.22,.84,0,0,.7], foot:[2.3,.22,.84,0,0,0], acerca:[2.5,0,1,0,.3,.95], contacto:[.1,.05,.95,0,0,.16]};
 let currentPose='', pinnedActive=false, loaded=false;
 function pose(n){ if(currentPose===n) return; currentPose=n; const p=POSES[n]; if(!p) return; const m=isMobile();
   Object.assign(T,{x:m?0:p[0],y:m?(n==='hero'?1.02:.9):p[1],s:m?Math.min(p[2],.72)*(n==='hero'?1:.86):p[2],ry:p[3],mis:p[4],dim:m&&n!=='hero'?Math.min(p[5],.09):p[5],split:0,wave:0,queue:0,callouts:0,ring:0}); }
@@ -807,7 +807,7 @@ const EQ={pide:[.25,'El equipo empuja: aprovéchalo y dale protagonismo.'],duda:
 function dx(){ const f=new FormData($('#dx')); const d=DX[f.get('freno')], e=EQ[f.get('equipo')];
   $('#rNovel').textContent=d.novel; $('#rTitle').textContent=d.t; $('#rWhy').textContent=d.why+' '+ZONA[f.get('zona')];
   $('#rSteps').innerHTML=d.s.map(x=>`<li>${x}</li>`).join(''); $('#rMeter').style.transform=`scaleX(${e[0]})`; $('#rPeople').textContent=e[1];
-  POSES.diag[4]=d.mis; if(currentPose==='diag'){ T.mis=d.mis; T.ry=POSES.diag[3]+Math.random()*.2; }
+  POSES.diag[4]=d.mis; if(currentPose==='diag'){ T.mis=d.mis; T.ry=POSES.diag[3]; }
   window.khDx=`${d.t}. ${ZONA[f.get('zona')]} ${e[1]}`; }
 $('#dx').addEventListener('change',dx); dx();
 $('#rGo').addEventListener('click',()=>{ const m=$('#fMsg'); if(!m.value) m.value='Hemos hecho el diagnóstico en vuestra web: '+window.khDx; });
@@ -1077,7 +1077,7 @@ const clock=new THREE.Clock(); let t=0;
 function frame(){ const dt=Math.min(clock.getDelta(),.05); t+=reduceM?0:dt; const k=1-Math.exp(-dt*4.2);
   for(const p of ['x','y','s','ry','mis','split','wave','queue','dim','ring']) C[p]+=(T[p]-C[p])*k; C.ringA+=(T.ringA-C.ringA)*(1-Math.exp(-dt*9)); C.assemble+=(T.assemble-C.assemble)*(1-Math.exp(-dt*2.2));
   group.position.set(C.x,C.y+Math.sin(t*.6)*.03,0); group.scale.setScalar(C.s*(1-.08*C.assemble));
-  group.rotation.y=C.ry+IN.rot+IN.scrollRot+IN.mx*.28; group.rotation.x=.04+IN.my*.14;
+  const fr0=C.ringA*19/20*Math.PI*2, turn=Math.atan2(Math.sin(fr0),Math.cos(fr0))*C.ring; group.rotation.y=C.ry+(IN.rot+IN.scrollRot+IN.mx*.28)*(1-C.ring)-turn; group.rotation.x=.04+IN.my*.14*(1-C.ring);
   dust.position.copy(group.position); dust.rotation.y=t*.05+IN.mx*.2; dust.rotation.x=IN.my*.1; dust.scale.setScalar(C.s*(1+C.mis*.42)); dustM.forEach(m=>m.opacity=.85*Math.min(1,.12+C.mis)*C.dim*(1-C.ring));
   if(window.khRingCut){ C.ring=0; window.khRingCut=false; } if(T.ring<C.ring) C.ring+=(T.ring-C.ring)*(1-Math.exp(-dt*9)); ringG.visible=C.ring>.03; if(ringG.visible){ const front=C.ringA*19/20*Math.PI*2; ringG.position.set(0,mob?.28-lp.getBoundingClientRect().top/innerHeight*(2*camera.position.z*Math.tan(camera.fov*Math.PI/360)):-.02,0); ringG.rotation.x=mob?0:.2;  books.forEach(m=>{ let a=m.userData.a-front; a=Math.atan2(Math.sin(a),Math.cos(a)); const near=Math.max(0,Math.cos(a)), wantF=(m.userData.i===window.khLibI&&window.khFlip)?Math.PI:0; m.userData.fr=(m.userData.fr||0)+(wantF-(m.userData.fr||0))*(1-Math.exp(-dt*6));
       if(mob){ const lim=.72, kk=Math.max(0,1-Math.abs(a)/lim); m.visible=Math.abs(a)<lim; if(!m.visible) return; m.position.set(a*3.1,0,kk*1.2); m.rotation.set(0,-a*.5+m.userData.fr,0); m.scale.setScalar((1.02+.72*kk*kk)*Math.min(1,C.ring*1.15)); const l2=.55+.45*kk; [1,4,5].forEach(i2=>m.material[i2].color.setScalar(l2)); return; } const R2=RAD; m.position.set(Math.sin(a)*R2,Math.sin(m.userData.a*3+t*.4)*.1+.1*near,Math.cos(a)*R2); m.rotation.y=-a*.24+m.userData.fr+Math.sin(t*.5+m.userData.i)*.04; m.rotation.x=-.05+IN.my*.2*near; m.scale.setScalar((1+Math.pow(near,10)*.26)*Math.min(1,C.ring*1.15)); const lit=.5+.5*Math.pow(near,3); [1,4,5].forEach(k=>m.material[k].color.setScalar(lit)); }); }
