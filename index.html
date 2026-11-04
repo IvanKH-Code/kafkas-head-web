@@ -1040,7 +1040,7 @@ const slabs=[]; const rng=i=>{ const v=Math.sin(i*127.1+11.7)*43758.5453; return
 for(let i=0;i<N;i++){ const y=yMin+(i+.5)*H, sh=new THREE.Shape(ring(y)); const g=new THREE.ExtrudeGeometry(sh,{depth:H*.8,bevelEnabled:true,bevelSize:.006,bevelThickness:.006,bevelSegments:1,steps:1}); g.rotateX(-Math.PI/2); g.rotateY(Math.PI); g.translate(0,-H*.4,0);
   let sideMat=y>.66?hair:y<-1.1?suit:(y<-.86?shirt:side), mats=[cap,sideMat];
   if(y<=.66&&y>-.56&&y>=-.86){ const edge=lerpT([[-.6,-.2],[-.3,-.17],[.1,-.13],[.3,-.02],[.48,.12],[.66,.34]],y)+(rng(i+200)-.5)*.07, g1=g.groups[1], names=['position','normal','uv'], tris=[[],[]];
-    const P=g.attributes.position; for(let t=g1.start;t<g1.start+g1.count;t+=3){ const z=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3, x=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3; tris[z<edge+Math.sin(x*9+i)*.018?1:0].push(t); }
+    const P=g.attributes.position; for(let t=g1.start;t<g1.start+g1.count;t+=3){ const z=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3, x=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3; const ang=Math.atan2(Math.abs(x),z), ear=lerpT(EAR,y)>.01&&Math.abs(ang-Math.PI/2-.12)<.42; tris[z<edge+Math.sin(x*9+i)*.018&&!ear?1:0].push(t); }
     names.forEach(n=>{ const A=g.attributes[n], c=A.array.slice(), sz=A.itemSize; let w=g1.start; tris.flat().forEach(t=>{ for(let v=0;v<3*sz;v++) A.array[w*sz+v]=c[t*sz+v]; w+=3; }); A.needsUpdate=true; });
     const light=tris[0].length*3, start=g1.start, count=g1.count, cap0=g.groups[0]; g.clearGroups(); g.addGroup(cap0.start,cap0.count,0); g.addGroup(start,light,1); g.addGroup(start+light,count-light,2); mats=[cap,side,hair]; }
   const m=new THREE.Mesh(g,mats); m.position.y=y; group.add(m); slabs.push({m,y,a:(rng(i)-.5)*3.2,p:rng(i+40)*6.28,dx:(rng(i+80)-.5)}); }
