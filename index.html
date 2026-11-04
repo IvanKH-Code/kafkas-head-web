@@ -1037,7 +1037,7 @@ function ring(y){ const pts=[], n=120, w=lerpT(W,y), f=lerpT(F,y), b=lerpT(B,y),
   return pts; }
 const N=mob?38:46, yMin=-1.72, yMax=1.2, H=(yMax-yMin)/N, group=new THREE.Group(); scene.add(group);
 const slabs=[]; const rng=i=>{ const v=Math.sin(i*127.1+11.7)*43758.5453; return v-Math.floor(v); };
-for(let i=0;i<N;i++){ const y=yMin+(i+.5)*H, sh=new THREE.Shape(ring(y)); const g=new THREE.ExtrudeGeometry(sh,{depth:H*.8,bevelEnabled:true,bevelSize:.006,bevelThickness:.006,bevelSegments:1,steps:1}); g.rotateX(-Math.PI/2); g.translate(0,-H*.4,0);
+for(let i=0;i<N;i++){ const y=yMin+(i+.5)*H, sh=new THREE.Shape(ring(y)); const g=new THREE.ExtrudeGeometry(sh,{depth:H*.8,bevelEnabled:true,bevelSize:.006,bevelThickness:.006,bevelSegments:1,steps:1}); g.rotateX(-Math.PI/2); g.rotateY(Math.PI); g.translate(0,-H*.4,0);
   const m=new THREE.Mesh(g,[cap,y>.66?hair:y<-1.1?suit:(y<-.86?shirt:side)]); m.position.y=y; group.add(m); slabs.push({m,y,a:(rng(i)-.5)*3.2,p:rng(i+40)*6.28,dx:(rng(i+80)-.5)}); }
 group.position.set(1.75,0,0);
 
