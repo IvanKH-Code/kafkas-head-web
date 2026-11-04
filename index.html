@@ -1015,7 +1015,7 @@ const low=new THREE.PointLight(0xdfe9f7,16,30,2); low.position.set(3.5,-3,3); sc
 /* brushed steel */
 function brushed(){ const c=document.createElement('canvas'); c.width=512;c.height=64; const x=c.getContext('2d'); x.fillStyle='#808080'; x.fillRect(0,0,512,64); for(let i=0;i<1500;i++){ const g=110+Math.random()*90|0; x.fillStyle=`rgba(${g},${g},${g},.28)`; x.fillRect(Math.random()*512,Math.random()*64,30+Math.random()*180,1); } const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2,1); return t; }
 const bt=brushed();
-const side=new THREE.MeshStandardMaterial({vertexColors:true,color:0xc6ced9,metalness:1,roughness:.38,roughnessMap:bt,bumpMap:bt,bumpScale:.12,envMapIntensity:.95});
+const side=new THREE.MeshStandardMaterial({color:0xc6ced9,metalness:1,roughness:.38,roughnessMap:bt,bumpMap:bt,bumpScale:.12,envMapIntensity:.95});
 const cap=new THREE.MeshStandardMaterial({color:0x10253f,metalness:.55,roughness:.5,envMapIntensity:.7});
 const hair=new THREE.MeshStandardMaterial({color:0x151a22,metalness:.9,roughness:.42,roughnessMap:bt,envMapIntensity:.9});
 const suit=new THREE.MeshStandardMaterial({color:0x10253f,metalness:.85,roughness:.46,roughnessMap:bt,envMapIntensity:1});
@@ -1038,8 +1038,12 @@ function ring(y){ const pts=[], n=120, w=lerpT(W,y), f=lerpT(F,y), b=lerpT(B,y),
 const N=mob?38:46, yMin=-1.72, yMax=1.2, H=(yMax-yMin)/N, group=new THREE.Group(); scene.add(group);
 const slabs=[]; const rng=i=>{ const v=Math.sin(i*127.1+11.7)*43758.5453; return v-Math.floor(v); };
 for(let i=0;i<N;i++){ const y=yMin+(i+.5)*H, sh=new THREE.Shape(ring(y)); const g=new THREE.ExtrudeGeometry(sh,{depth:H*.8,bevelEnabled:true,bevelSize:.006,bevelThickness:.006,bevelSegments:1,steps:1}); g.rotateX(-Math.PI/2); g.rotateY(Math.PI); g.translate(0,-H*.4,0);
-  if(y<=.66&&y>=-1.1&&y>=-.86){ const P=g.attributes.position, col=new Float32Array(P.count*3), edge=lerpT([[-.6,-.2],[-.3,-.17],[.1,-.13],[.3,-.02],[.48,.12],[.66,.34]],y)+(rng(i+200)-.5)*.07, nape=y>-.56; for(let k=0;k<P.count;k++){ const dark=nape&&P.getZ(k)<edge+Math.sin(P.getX(k)*9+i)*.018; col[k*3]=dark?.1:1; col[k*3+1]=dark?.125:1; col[k*3+2]=dark?.17:1; } g.setAttribute('color',new THREE.BufferAttribute(col,3)); }
-  const m=new THREE.Mesh(g,[cap,y>.66?hair:y<-1.1?suit:(y<-.86?shirt:side)]); m.position.y=y; group.add(m); slabs.push({m,y,a:(rng(i)-.5)*3.2,p:rng(i+40)*6.28,dx:(rng(i+80)-.5)}); }
+  let sideMat=y>.66?hair:y<-1.1?suit:(y<-.86?shirt:side), mats=[cap,sideMat];
+  if(y<=.66&&y>-.56&&y>=-.86){ const edge=lerpT([[-.6,-.2],[-.3,-.17],[.1,-.13],[.3,-.02],[.48,.12],[.66,.34]],y)+(rng(i+200)-.5)*.07, g1=g.groups[1], names=['position','normal','uv'], tris=[[],[]];
+    const P=g.attributes.position; for(let t=g1.start;t<g1.start+g1.count;t+=3){ const z=(P.getZ(t)+P.getZ(t+1)+P.getZ(t+2))/3, x=(P.getX(t)+P.getX(t+1)+P.getX(t+2))/3; tris[z<edge+Math.sin(x*9+i)*.018?1:0].push(t); }
+    names.forEach(n=>{ const A=g.attributes[n], c=A.array.slice(), sz=A.itemSize; let w=g1.start; tris.flat().forEach(t=>{ for(let v=0;v<3*sz;v++) A.array[w*sz+v]=c[t*sz+v]; w+=3; }); A.needsUpdate=true; });
+    const light=tris[0].length*3, start=g1.start, count=g1.count, cap0=g.groups[0]; g.clearGroups(); g.addGroup(cap0.start,cap0.count,0); g.addGroup(start,light,1); g.addGroup(start+light,count-light,2); mats=[cap,side,hair]; }
+  const m=new THREE.Mesh(g,mats); m.position.y=y; group.add(m); slabs.push({m,y,a:(rng(i)-.5)*3.2,p:rng(i+40)*6.28,dx:(rng(i+80)-.5)}); }
 group.position.set(1.75,0,0);
 
 /* binary dust: the brand's head made of ones and zeros */
