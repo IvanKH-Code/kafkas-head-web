@@ -426,7 +426,7 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
 .view h1:focus{outline:0}
 
 .callfab{display:none}
-@media (max-width:900px){.callfab{display:grid;place-items:center;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:56px;height:56px;border-radius:50%;background:#fff;color:var(--navy)}.callfab svg{width:26px;height:26px}body[data-view=bibliografia] .callfab,body[data-view=contacto] .callfab{display:none}}
+@media (max-width:900px){.callfab{display:grid;place-items:center;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:56px;height:56px;border-radius:50%;background:#fff;color:var(--navy)}.callfab svg{width:26px;height:26px}body[data-page=bibliografia] .callfab,body[data-page=contacto] .callfab{display:none}}
 
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(2,3,6,.6);z-index:70;opacity:0;pointer-events:none;transition:opacity .4s ease}
@@ -916,7 +916,7 @@ if(hasG) gsap.registerPlugin(ScrollTrigger);
 function splitWords(el){ if(el.dataset.done) return; el.dataset.done=1; const out=[]; el.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)) out.push(document.createTextNode(' ')); else { const w=document.createElement('span'); w.className='w'; const i=document.createElement('span'); i.textContent=t; w.appendChild(i); out.push(w);} }); el.setAttribute('aria-label',el.textContent); el.textContent=''; out.forEach(o=>el.appendChild(o)); }
 function toTop(){ if(lenis) lenis.scrollTo(0,{immediate:true,force:true}); scrollTo(0,0); }
 function scrollToEl(el){ if(lenis) lenis.scrollTo(el,{offset:0,duration:1.6,easing:t=>1-Math.pow(1-t,4)}); else el.scrollIntoView({behavior:reduce?'auto':'smooth'}); }
-function show(v){ view=v; document.body.dataset.view=v; $$('.view').forEach(e=>e.hidden=e.dataset.view!==v); $$('#navList a').forEach(a=>{ if(a.getAttribute('href')==='#'+v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); document.title=ROUTES[v]; nav.classList.remove('is-hidden','open'); $('#burger').setAttribute('aria-expanded',false); }
+function show(v){ view=v; document.body.dataset.page=v; $$('.view').forEach(e=>e.hidden=e.dataset.view!==v); $$('#navList a').forEach(a=>{ if(a.getAttribute('href')==='#'+v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); document.title=ROUTES[v]; nav.classList.remove('is-hidden','open'); $('#burger').setAttribute('aria-expanded',false); }
 const wipe=$('#wipe'); wipe.innerHTML='<i></i>'.repeat(14); const wb=[...wipe.children];
 function focusH1(){ const h=$('.view:not([hidden]) h1'); if(h&&h.offsetParent){ h.tabIndex=-1; h.focus({preventScroll:true}); } }
 function go(v){ if(v===view) return; if(!window.gsap||reduce||!loaded){ show(v); toTop(); if(loaded){ initView(v); focusH1(); } return; }
