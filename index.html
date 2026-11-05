@@ -115,12 +115,12 @@ main,footer{position:relative;z-index:2}
 .hero__meta span{display:flex;align-items:center;gap:8px;background:rgba(5,7,11,.66);padding:3px 8px}
 .live{width:7px;height:7px;background:var(--ink);transform:rotate(45deg);animation:ping 2s ease-out infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}100%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:46px;border-top:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:46px;border-top:1px solid var(--line)}
 .stat{padding:18px 20px 0 0;min-width:0}
 .stat+.stat{padding-left:20px;border-left:1px solid var(--line)}
 .stat b{display:block;font:600 clamp(2.2rem,1.5rem + 1.9vw,3.6rem)/1 var(--disp)}
 .stat p{font-size:14px;color:var(--muted);margin:6px 0 0;line-height:1.4}
-@media (max-width:900px){.hero{padding-top:47svh;align-content:start}.hero__row{grid-template-columns:1fr}.hero__meta{justify-items:start;text-align:left}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:nth-child(3){padding-left:0;border-left:0}.stat{padding-bottom:14px}}
+@media (max-width:900px){.hero{padding-top:47svh;align-content:start}.hero__row{grid-template-columns:1fr}.hero__meta{justify-items:start;text-align:left}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding-bottom:14px}}
 
 /* marquee */
 .marquee{border-block:1px solid var(--line);overflow:hidden;white-space:nowrap;padding:18px 0;background:rgba(5,7,11,.6)}
@@ -425,6 +425,9 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
 .direct span a{font:inherit;text-decoration:none;min-height:0;display:inline}
 .view h1:focus{outline:0}
 
+.callfab{display:none}
+@media (max-width:900px){.callfab{display:grid;place-items:center;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:56px;height:56px;border-radius:50%;background:#fff;color:var(--navy)}.callfab svg{width:26px;height:26px}body[data-view=bibliografia] .callfab,body[data-view=contacto] .callfab{display:none}}
+
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(2,3,6,.6);z-index:70;opacity:0;pointer-events:none;transition:opacity .4s ease}
 .scrim.on{opacity:1;pointer-events:auto}
@@ -468,7 +471,7 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
     <li><a href="#contacto">Contacto</a></li>
   </ul>
   <div class="nav__end">
-    <a class="btn btn--sm" href="#contacto" data-magnetic><span class="t">Reservar</span></a>
+    <a class="btn btn--sm" href="#contacto" data-magnetic><span class="t">Contáctanos</span></a>
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="navList">Menú</button>
   </div>
 </header>
@@ -490,7 +493,6 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
     <div class="stats">
       <div class="stat" data-up><b>3</b><p>servicios: estrategia, implementación y automatización</p></div>
       <div class="stat" data-up><b>4</b><p>personas entre ingeniería, datos y desarrollo</p></div>
-      <div class="stat" data-up><b>2004</b><p>el año desde el que el equipo trabaja en construcción</p></div>
       <div class="stat" data-up><b>20</b><p>libros recomendados en nuestra bibliografía</p></div>
     </div>
   </section>
@@ -524,14 +526,14 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
         <h2>Implementación de proyectos</h2>
         <p class="promise">En tiempo y coste acordados.</p>
         <p class="long">Acompañamos la puesta en marcha de soluciones tecnológicas, para garantizar que La Metamorfosis se produce de una manera exitosa, ya sean desarrolladas por nosotros o por terceros. Supervisamos el proceso de principio a fin para garantizar su correcta adopción, alineación con objetivos estratégicos y retorno de inversión.</p>
-        <div class="chips"><span>Albarán digital</span><span>ERP</span><span>Geolocalización de flota</span></div>
+        <div class="chips"><span>Albarán digital</span><span>ERP: programa de gestión</span><span>Geolocalización de flota</span></div>
       </div></div>
       <div class="phase" id="ph2"><div class="phase__in">
         <div class="novel">El Proceso</div>
         <h2>Automatización de procesos</h2>
         <p class="promise">Eficiencia y ahorro con impacto en la cuenta de resultados.</p>
         <p class="long">Identificamos tareas repetitivas o ineficientes dentro de tus flujos de trabajo y las automatizamos con herramientas digitales. Hacemos que El Proceso sea lo más eficiente posible, evitando burocracia innecesaria y automatizando aquello donde el trabajador no aporta valor. Así, liberamos tiempo, reducimos errores y aumentamos la productividad, adaptando cada solución a las necesidades reales del negocio.</p>
-        <div class="chips"><span>RPA</span><span>Inteligencia artificial</span><span>Agentes de IA</span></div>
+        <div class="chips"><span>RPA: robots de software</span><span>Inteligencia artificial</span><span>Agentes de IA</span></div>
       </div></div>
       <div class="nov__dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
     </div>
@@ -568,7 +570,7 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
         <div class="label" style="color:var(--ink-2)">Trabajo sobre las personas</div>
         <div class="meter"><i id="rMeter"></i></div>
         <p id="rPeople" style="font-size:15px"></p>
-        <a class="btn" href="#contacto" id="rGo" style="margin-top:8px"><span class="t">Hablar de esto</span></a>
+        <a class="btn" href="#contacto" id="rGo" style="margin-top:8px"><span class="t">Contáctanos</span></a>
       </aside>
     </div>
   </section>
@@ -749,6 +751,7 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
 </div></footer>
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
+<a class="callfab" href="tel:+34667333299" aria-label="Llamar al +34 667 333 299"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></a>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" tabindex="-1" inert>
   <button class="drawer__x" id="dClose" type="button">Cerrar</button>
@@ -837,7 +840,7 @@ const STOPS=[['Obra',1],['Encargado',0],['Of. técnica',0],['Administración',0]
 
 /* ---------- equipo ---------- */
 const TEAM=[['FM|https://images.squarespace-cdn.com/content/v1/67f794a2fadc6827c5c68836/5e766993-8f42-49e3-b5ff-de7ba6e0e135/F%C3%A9lix+Mart%C3%ADnez+KAFKAS+HEAD.jpg?format=500w','#10253F','#fff','Félix Martínez Cuart','Fundador','Ingeniero de caminos, en el sector de la construcción desde 2009 en diferentes verticales: construcción, diseño, proveedores y logística. En 2018 empezó con la transformación digital de una multinacional del sector y después fundó Kafka’s Head.'],
- ['FR|https://images.squarespace-cdn.com/content/v1/67f794a2fadc6827c5c68836/cd9aa179-bc1b-4135-9868-61600bde2889/Fernando+Ram%C3%ADrez+KAFKAS+HEAD.jpg?format=500w','#404040','#fff','Fernando Ramírez Graniel','Consultor senior en transformación digital, automatización y data','Ingeniero civil, MBA y máster en Data & Analytics, con extensa carrera en la construcción desde 2004. Desde 2016 lidera proyectos de CRM, plataforma del cliente, MDM y experiencia del cliente.'],
+ ['FR|https://images.squarespace-cdn.com/content/v1/67f794a2fadc6827c5c68836/cd9aa179-bc1b-4135-9868-61600bde2889/Fernando+Ram%C3%ADrez+KAFKAS+HEAD.jpg?format=500w','#404040','#fff','Fernando Ramírez Graniel','Consultor senior en transformación digital, automatización y data','Ingeniero civil, MBA y máster en Data & Analytics, con extensa carrera en la construcción desde 2004. Desde 2016 lidera proyectos de CRM, plataforma del cliente, MDM (gestión de datos maestros) y experiencia del cliente.'],
  ['RF|https://images.squarespace-cdn.com/content/v1/67f794a2fadc6827c5c68836/f154f639-fcdc-44a2-8511-13a346c11ba0/Roberto.jpg?format=500w','#7f7f7f','#000','Roberto Fernández del Barrio','Desarrollador junior full stack y sistemas','Técnico en Sistemas Microinformáticos y Redes, formado en Desarrollo de Aplicaciones Multiplataforma. Con experiencia práctica en desarrollo de software y sistemas. Ha trabajado en desarrollo web con PHP, Java, JavaScript, HTML y CSS, además de en SEO y gestión digital. Cuenta también con experiencia en administración de sistemas, redes, servidores e incidencias, así como en Microsoft 365 y aplicaciones de gestión empresarial.'],
  ['IH|https://images.squarespace-cdn.com/content/v1/67f794a2fadc6827c5c68836/af0b90bb-0c2e-4a4d-b195-37f0a36a1f68/Iv%C3%A1n.jpg?format=500w','#d9d9d9','#000','Iván Hidalgo Montalvo','Desarrollador junior en sistemas y aplicaciones','Técnico en Sistemas Microinformáticos y Redes, cursando el Grado Superior en Desarrollo de Aplicaciones Multiplataforma. Cuenta con experiencia práctica en soporte técnico y resolución de incidencias en entornos empresariales. Orientado al desarrollo de software y aplicaciones, combina una base técnica en sistemas con una clara vocación por seguir aprendiendo y creciendo en el ámbito de la tecnología.']];
 $('#people').innerHTML=TEAM.map(p=>{ const [ini,src]=p[0].split('|'); return `<article class="person" data-up><div class="pic" style="background:${p[1]};color:${p[2]}">${ini}<img class="real" src="${src}" alt="${p[3]}" loading="lazy" data-rm></div><div><h3>${p[3]}</h3><small>${p[4]}</small></div><p>${p[5]}</p></article>`; }).join('');
@@ -913,7 +916,7 @@ if(hasG) gsap.registerPlugin(ScrollTrigger);
 function splitWords(el){ if(el.dataset.done) return; el.dataset.done=1; const out=[]; el.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)) out.push(document.createTextNode(' ')); else { const w=document.createElement('span'); w.className='w'; const i=document.createElement('span'); i.textContent=t; w.appendChild(i); out.push(w);} }); el.setAttribute('aria-label',el.textContent); el.textContent=''; out.forEach(o=>el.appendChild(o)); }
 function toTop(){ if(lenis) lenis.scrollTo(0,{immediate:true,force:true}); scrollTo(0,0); }
 function scrollToEl(el){ if(lenis) lenis.scrollTo(el,{offset:0,duration:1.6,easing:t=>1-Math.pow(1-t,4)}); else el.scrollIntoView({behavior:reduce?'auto':'smooth'}); }
-function show(v){ view=v; $$('.view').forEach(e=>e.hidden=e.dataset.view!==v); $$('#navList a').forEach(a=>{ if(a.getAttribute('href')==='#'+v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); document.title=ROUTES[v]; nav.classList.remove('is-hidden','open'); $('#burger').setAttribute('aria-expanded',false); }
+function show(v){ view=v; document.body.dataset.view=v; $$('.view').forEach(e=>e.hidden=e.dataset.view!==v); $$('#navList a').forEach(a=>{ if(a.getAttribute('href')==='#'+v) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); document.title=ROUTES[v]; nav.classList.remove('is-hidden','open'); $('#burger').setAttribute('aria-expanded',false); }
 const wipe=$('#wipe'); wipe.innerHTML='<i></i>'.repeat(14); const wb=[...wipe.children];
 function focusH1(){ const h=$('.view:not([hidden]) h1'); if(h&&h.offsetParent){ h.tabIndex=-1; h.focus({preventScroll:true}); } }
 function go(v){ if(v===view) return; if(!window.gsap||reduce||!loaded){ show(v); toTop(); if(loaded){ initView(v); focusH1(); } return; }
