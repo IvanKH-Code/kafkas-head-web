@@ -200,7 +200,7 @@ legend{font-size:15px;color:var(--muted);margin-bottom:10px;padding:0}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin:30px 0 24px}
 .filter{appearance:none;border:0;cursor:pointer;min-height:44px;padding:0 16px;background:var(--glass);font-size:15px;font-weight:500;transition:background-color .25s ease,color .25s ease}
 .filter[aria-pressed=true]{background:var(--ink);color:var(--navy)}
-.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:4px;perspective:1200px}
+.cat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;perspective:1200px}
 .item{background:rgba(16,37,63,.86);padding:22px 22px 20px;display:grid;gap:8px;align-content:start;min-height:190px;transition:background-color .3s ease}
 .item[hidden]{display:none!important}
 @media (hover:hover){.item:hover{background:var(--navy-hi)}}
@@ -427,6 +427,9 @@ h1,h2,h3,h4{overflow-wrap:break-word;min-width:0}
 
 .callfab{display:none}
 @media (max-width:900px){.callfab{display:grid;place-items:center;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:56px;height:56px;border-radius:50%;background:#fff;color:var(--navy)}.callfab svg{width:26px;height:26px}body[data-page=bibliografia] .callfab,body[data-page=contacto] .callfab{display:none}}
+
+@media (max-width:1100px){.cat{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.cat{grid-template-columns:minmax(0,1fr)}}
 
 /* drawer */
 .scrim{position:fixed;inset:0;background:rgba(2,3,6,.6);z-index:70;opacity:0;pointer-events:none;transition:opacity .4s ease}
@@ -822,8 +825,8 @@ const CAT=[['est','Diagnóstico integral','Procesos, equipos, propuesta de valor
 const SV={est:'Estrategia',imp:'Implementación',aut:'Automatización'};
 $('#cat').innerHTML=CAT.map(c=>`<article class="item" data-k="${c[0]}"><small>${SV[c[0]]}</small><h3>${c[1]}</h3><p>${c[2]}</p></article>`).join('');
 $('#filters').addEventListener('click',e=>{ const b=e.target.closest('.filter'); if(!b) return; $$('.filter').forEach(x=>x.setAttribute('aria-pressed',x===b)); const f=b.dataset.f, items=$$('.item');
-  const st=window.Flip&&!reduce?Flip.getState(items):null; items.forEach(i=>i.hidden=!(f==='all'||i.dataset.k===f));
-  if(st){ Flip.from(st,{duration:.7,ease:'expo.out',stagger:.02,absolute:true,onEnter:el=>gsap.fromTo(el,{opacity:0,scale:.92},{opacity:1,scale:1,duration:.5}),onLeave:el=>gsap.to(el,{opacity:0,scale:.92,duration:.3}),onComplete:()=>window.ScrollTrigger&&ScrollTrigger.refresh()}); } });
+  const cat=$('#cat'), h0=cat.offsetHeight, st=window.Flip&&!reduce?Flip.getState(items):null; items.forEach(i=>i.hidden=!(f==='all'||i.dataset.k===f)); const h1=cat.offsetHeight; if(st) gsap.fromTo(cat,{height:h0},{height:h1,duration:.7,ease:'expo.out',overwrite:true});
+  if(st){ Flip.from(st,{duration:.7,ease:'expo.out',stagger:.02,absolute:true,onEnter:el=>gsap.fromTo(el,{opacity:0,scale:.92},{opacity:1,scale:1,duration:.5}),onLeave:el=>gsap.to(el,{opacity:0,scale:.92,duration:.3}),onComplete:()=>{ gsap.killTweensOf(cat); gsap.set(cat,{clearProps:'height'}); window.ScrollTrigger&&ScrollTrigger.refresh(); }}); } });
 
 /* ---------- ruta del albarán ---------- */
 const STOPS=[['Obra',1],['Encargado',0],['Of. técnica',0],['Administración',0],['ERP',1],['Factura',1]];
